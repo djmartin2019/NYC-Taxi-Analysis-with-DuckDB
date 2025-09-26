@@ -198,7 +198,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 📞 Contact
 
-Your Name - [@djmartin2019](https://x.com/djmartin2019) - email@example.com
+Your Name - [@djmartin2019](https://x.com/djmartin2019) - djmartin2019@gmail.com
 
 Project Link: [https://github.com/djmartin2019/NYC_Taxi_DuckDB](https://github.com/djmartin2019/NYC_Taxi_DuckDB)
 
