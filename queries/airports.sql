@@ -5,8 +5,8 @@ SELECT
         ELSE 'None' END AS airport_zone,
     COUNT(*) AS trips
 FROM taxi t
-JOIN taxizones z1 ON t."PULocationID" = z1."LocationID"
-JOIN taxizones z2 ON t."DOLocationID" = z2."LocationID"
+JOIN TaxiZones z1 ON t."PULocationID" = z1."LocationID"
+JOIN TaxiZones z2 ON t."DOLocationID" = z2."LocationID"
 WHERE z1.zone LIKE '%Airport%' OR z2.zone LIKE '%Airport%'
 GROUP BY airport_zone
 ORDER BY trips DESC;
