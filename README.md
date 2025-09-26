@@ -6,19 +6,19 @@
 [![Data](https://img.shields.io/badge/Data-NYC%20Taxi%202024-orange.svg)](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
 [![Dashboard](https://img.shields.io/badge/Dashboard-Plotly%20Dash-purple.svg)](https://plotly.com/dash/)
 
-A comprehensive data analytics project demonstrating DuckDB's capabilities for processing large-scale NYC taxi trip data. This project showcases modern data engineering practices with SQL-powered analytics, interactive visualizations, and a clean modular architecture.
+A demonstration project showcasing DuckDB's capabilities for processing large-scale NYC taxi trip data. This project illustrates how DuckDB can efficiently process Parquet files and enable SQL analytics with minimal setup.
 
 ## 🎯 Project Overview
 
-This project analyzes 12 months of NYC Yellow Taxi trip data (2024) using DuckDB, a high-performance analytical database. It demonstrates how DuckDB can efficiently process large Parquet files and enable complex SQL analytics without the overhead of traditional database systems.
+This project analyzes 12 months of NYC Yellow Taxi trip data (2024) using DuckDB, demonstrating how DuckDB can process large datasets directly from Parquet files without requiring a traditional database server.
 
 ### Key Features
 
-- **High-Performance Analytics**: Process 12 months of taxi data using DuckDB's columnar engine
-- **SQL-First Approach**: Complex analytics written in pure SQL for maximum performance
+- **DuckDB Analytics**: Process 12 months of taxi data using DuckDB's columnar engine
+- **SQL-First Approach**: Analytics written in pure SQL leveraging DuckDB's capabilities
 - **Interactive Dashboard**: Plotly-powered web dashboard with multiple analytical views
 - **Modular Architecture**: Clean separation of concerns with dedicated modules for ingestion, queries, and visualization
-- **Production-Ready**: Proper error handling, connection management, and scalable design
+- **Simple Setup**: Minimal configuration required to get started
 
 ## 📊 Analytics Capabilities
 
@@ -109,14 +109,14 @@ WHERE DATE_PART('year', tpep_pickup_datetime) = 2024
 - **taxi**: Main trip data table with ~50M+ records
 - **TaxiZones**: Zone lookup table with location metadata
 
-### Query Performance
+### DuckDB Benefits
 
-DuckDB's columnar engine enables:
+This project demonstrates DuckDB's advantages:
 
-- **Fast aggregations** on large datasets
-- **Efficient joins** between trip and zone data
-- **Complex analytical queries** with subqueries and CTEs
-- **Memory-efficient processing** of Parquet files
+- **Direct Parquet Processing**: No need to import data into a traditional database
+- **SQL Analytics**: Familiar SQL syntax for complex analytical queries
+- **Columnar Processing**: Efficient handling of analytical workloads
+- **Embedded Database**: Runs as a library without requiring a database server
 
 ## 🔍 Analytics Examples
 
@@ -167,23 +167,24 @@ The interactive dashboard provides five analytical views:
 - **Plotly Dash**: Interactive web dashboard
 - **Parquet**: Efficient columnar data format
 
-## 📊 Performance Characteristics
+## 📊 Project Characteristics
 
 - **Data Volume**: 12 months of NYC taxi data (~50M+ trips)
-- **Processing Time**: Database creation in under 2 minutes
-- **Query Performance**: Sub-second response times for complex analytics
-- **Memory Usage**: Efficient columnar processing with minimal memory footprint
+- **Database Size**: DuckDB file grows to ~2GB after processing
+- **Setup Time**: Database creation takes a few minutes
+- **Query Response**: Interactive queries respond quickly for dashboard use
+- **Memory Usage**: Efficient columnar processing with reasonable memory footprint
 
 ## 🤝 Contributing
 
-Contributions are welcome! Please feel free to submit a Pull Request. For major changes, please open an issue first to discuss what you would like to change.
+This is a demonstration project, but contributions are welcome! Feel free to submit a Pull Request for improvements.
 
 ### Development Setup
 
 1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
+2. Create a feature branch (`git checkout -b feature/improvement`)
+3. Commit your changes (`git commit -m 'Add improvement'`)
+4. Push to the branch (`git push origin feature/improvement`)
 5. Open a Pull Request
 
 ## 📝 License
@@ -193,8 +194,8 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 ## 🙏 Acknowledgments
 
 - NYC Taxi & Limousine Commission for providing the trip data
-- DuckDB team for the excellent analytical database
-- Plotly team for the powerful visualization framework
+- DuckDB team for the embedded analytical database
+- Plotly team for the visualization framework
 
 ## 📞 Contact
 

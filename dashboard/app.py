@@ -32,8 +32,8 @@ TABS = {
     "⏱️ Travel Duration": "queries/durations.sql"
 }
 
-def create_professional_chart(df, chart_type, title, x_col, y_col, color_col=None):
-    """Create professionally styled charts with consistent branding"""
+def create_professional_chart(df, chart_type, title, x_col, y_col, color_col=None, x_label=None, y_label=None, hover_template=None):
+    """Create professionally styled charts with consistent branding and clear labels"""
     
     # Base layout template
     layout_template = {
@@ -49,14 +49,19 @@ def create_professional_chart(df, chart_type, title, x_col, y_col, color_col=Non
         'xaxis': {
             'gridcolor': '#404040',
             'color': COLORS['text_secondary'],
-            'title_font': {'color': COLORS['text']}
+            'title_font': {'color': COLORS['text'], 'size': 14},
+            'tickfont': {'color': COLORS['text_secondary'], 'size': 12},
+            'title': x_label or x_col.replace('_', ' ').title()
         },
         'yaxis': {
             'gridcolor': '#404040', 
             'color': COLORS['text_secondary'],
-            'title_font': {'color': COLORS['text']}
+            'title_font': {'color': COLORS['text'], 'size': 14},
+            'tickfont': {'color': COLORS['text_secondary'], 'size': 12},
+            'title': y_label or y_col.replace('_', ' ').title()
         },
-        'margin': {'l': 60, 'r': 60, 't': 80, 'b': 60}
+        'margin': {'l': 80, 'r': 60, 't': 80, 'b': 80},
+        'hovermode': 'closest'
     }
     
     if chart_type == 'bar':
@@ -66,22 +71,48 @@ def create_professional_chart(df, chart_type, title, x_col, y_col, color_col=Non
             y=y_col,
             color=y_col if not color_col else color_col,
             color_continuous_scale='viridis',
-            template='plotly_dark'
+            template='plotly_dark',
+            hover_data=df.columns.tolist()
         )
+        # Format y-axis for better readability
+        if 'pickups' in y_col or 'trips' in y_col or 'trip_count' in y_col:
+            fig.update_layout(yaxis_tickformat=',')
+        elif 'tip' in y_col:
+            fig.update_layout(yaxis_tickformat='$.2f')
+            
     elif chart_type == 'scatter':
         fig = px.scatter(
             df.head(20),  # Limit for performance
             x=x_col,
             y=y_col,
-            size=y_col if 'trip_count' in df.columns else None,
+            size='trip_count' if 'trip_count' in df.columns else None,
             color=color_col if color_col else COLORS['primary'],
             template='plotly_dark',
-            hover_data=df.columns.tolist()
+            hover_data=df.columns.tolist(),
+            size_max=30
         )
+        # Format axes for duration scatter plot
+        if 'duration' in y_col:
+            fig.update_layout(
+                yaxis_tickformat='.1f',
+                yaxis_title=f"{y_label or y_col.replace('_', ' ').title()} (minutes)"
+            )
+        if 'trip_count' in df.columns:
+            fig.update_traces(
+                hovertemplate="<b>%{x}</b><br>" +
+                              f"{y_label or y_col.replace('_', ' ').title()}: %{{y:.1f}} min<br>" +
+                              "Trip Count: %{marker.size}<br>" +
+                              "<extra></extra>"
+            )
     else:
         fig = px.line(df, x=x_col, y=y_col, template='plotly_dark')
     
     fig.update_layout(**layout_template)
+    
+    # Add custom hover templates for better data clarity
+    if hover_template:
+        fig.update_traces(hovertemplate=hover_template)
+    
     return fig
 
 def load_figure(tab_name):
@@ -100,28 +131,52 @@ def load_figure(tab_name):
         if "pickups" in query_path:
             return create_professional_chart(
                 df, 'bar', 'Top Pickup Zones by Volume', 
-                'pickup_zone', 'pickups'
+                'pickup_zone', 'pickups',
+                x_label='Pickup Zone',
+                y_label='Number of Pickups',
+                hover_template="<b>%{x}</b><br>Pickups: %{y:,}<br><extra></extra>"
             )
         elif "tips" in query_path:
             return create_professional_chart(
                 df, 'bar', 'Average Tip Amount by Pickup Zone',
-                'pickup_zone', 'avg_tip'
+                'pickup_zone', 'avg_tip',
+                x_label='Pickup Zone',
+                y_label='Average Tip Amount ($)',
+                hover_template="<b>%{x}</b><br>Avg Tip: $%{y:.2f}<br>Trips: %{customdata[2]:,}<br><extra></extra>"
             )
         elif "pairs" in query_path:
-            return create_professional_chart(
+            fig = create_professional_chart(
                 df, 'bar', 'Most Popular Pickup-Dropoff Routes',
-                'pickup_zone', 'trip_count', 'dropoff_zone'
+                'pickup_zone', 'trip_count', 'dropoff_zone',
+                x_label='Pickup Zone',
+                y_label='Number of Trips'
             )
+            # Fix hover template to show actual dropoff zone names
+            # When using color='dropoff_zone', the dropoff zone is in customdata[0]
+            fig.update_traces(
+                hovertemplate="<b>%{x}</b><br>Dropoff: %{customdata[0]}<br>Trips: %{y:,}<br><extra></extra>"
+            )
+            return fig
         elif "airports" in query_path:
             return create_professional_chart(
                 df, 'bar', 'Airport Traffic Volume',
-                'airport_zone', 'trips'
+                'airport_zone', 'trips',
+                x_label='Airport Zone',
+                y_label='Number of Trips',
+                hover_template="<b>%{x}</b><br>Trips: %{y:,}<br><extra></extra>"
             )
         elif "durations" in query_path:
-            return create_professional_chart(
+            fig = create_professional_chart(
                 df, 'scatter', 'Average Travel Duration by Route',
-                'pickup_zone', 'avg_duration', 'dropoff_zone'
+                'pickup_zone', 'avg_duration', 'dropoff_zone',
+                x_label='Pickup Zone',
+                y_label='Average Duration (Minutes)'
             )
+            # Add custom hover template for duration chart
+            fig.update_traces(
+                hovertemplate="<b>%{x}</b><br>Dropoff: %{customdata[1]}<br>Avg Duration: %{y:.1f} min<br>Trip Count: %{marker.size}<br><extra></extra>"
+            )
+            return fig
         else:
             return go.Figure().add_annotation(
                 text="No data available",
@@ -251,7 +306,7 @@ app.index_string = '''
             }
             .custom-tab:hover {
                 background-color: #404040;
-                color: white;
+                color: black;
             }
             .card {
                 background-color: #2d2d2d;
