@@ -60,35 +60,81 @@ NYC_Taxi_DuckDB/
 
 - Python 3.8+
 - pip package manager
+- ~3GB free disk space for data files
 
 ### Installation
 
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/yourusername/NYC_Taxi_DuckDB.git
+   git clone https://github.com/djmartin2019/NYC_Taxi_DuckDB.git
    cd NYC_Taxi_DuckDB
    ```
 
 2. **Install dependencies**
 
    ```bash
-   pip install duckdb dash plotly pandas
+   pip install -r requirements.txt
    ```
 
-3. **Build the database**
+3. **Download NYC Taxi Data**
+
+   You'll need to download the data files from the official NYC TLC website:
+
+   **Data Source**: [NYC TLC Trip Record Data](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+
+   **Required Files**:
+
+   - **Yellow Taxi Trip Records**: Download 2024 monthly files (January through December)
+     - Example: `yellow_tripdata_2024-01.parquet`, `yellow_tripdata_2024-02.parquet`, etc.
+   - **Taxi Zone Lookup Table**: Download the CSV file
+     - File: `taxi_zone_lookup.csv`
+
+   **Download Instructions**:
+
+   1. Visit the [NYC TLC Trip Record Data page](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page)
+   2. Navigate to the 2024 section
+   3. Download all 12 monthly Yellow Taxi Trip Records (PARQUET format)
+   4. Download the Taxi Zone Lookup Table (CSV format)
+   5. Place all downloaded files in the `data/` directory
+
+   **Expected file structure**:
+
+   ```
+   data/
+   ├── taxi_zone_lookup.csv
+   ├── yellow_tripdata_2024-01.parquet
+   ├── yellow_tripdata_2024-02.parquet
+   ├── yellow_tripdata_2024-03.parquet
+   ├── yellow_tripdata_2024-04.parquet
+   ├── yellow_tripdata_2024-05.parquet
+   ├── yellow_tripdata_2024-06.parquet
+   ├── yellow_tripdata_2024-07.parquet
+   ├── yellow_tripdata_2024-08.parquet
+   ├── yellow_tripdata_2024-09.parquet
+   ├── yellow_tripdata_2024-10.parquet
+   ├── yellow_tripdata_2024-11.parquet
+   └── yellow_tripdata_2024-12.parquet
+   ```
+
+4. **Build the database**
 
    ```bash
    python scripts/run_pipeline.py
    ```
 
-4. **Launch the dashboard**
+   This will create a DuckDB database with two tables:
+
+   - `taxi`: Contains all trip records from the Parquet files
+   - `TaxiZones`: Contains zone lookup information from the CSV file
+
+5. **Launch the dashboard**
 
    ```bash
    python dashboard/app.py
    ```
 
-5. **View the dashboard**
+6. **View the dashboard**
    Open your browser to `http://127.0.0.1:8050`
 
 ## 📈 Data Pipeline
@@ -193,9 +239,18 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ## 🙏 Acknowledgments
 
-- NYC Taxi & Limousine Commission for providing the trip data
+- [NYC Taxi & Limousine Commission](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page) for providing the trip data
 - DuckDB team for the embedded analytical database
 - Plotly team for the visualization framework
+
+## 📊 Data Source
+
+This project uses publicly available data from the NYC Taxi & Limousine Commission (TLC). The data includes:
+
+- **Yellow Taxi Trip Records**: Monthly trip data in Parquet format
+- **Taxi Zone Lookup Table**: Zone metadata in CSV format
+
+All data is available for download from the [official TLC Trip Record Data page](https://www.nyc.gov/site/tlc/about/tlc-trip-record-data.page). The TLC notes that trip data was collected by authorized technology providers and they make no representations as to the accuracy of the data.
 
 ## 📞 Contact
 
