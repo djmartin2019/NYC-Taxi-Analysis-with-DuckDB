@@ -1,0 +1,5 @@
+duckdb>=0.9.0
+dash>=2.14.0
+plotly>=5.17.0
+pandas>=2.0.0
+dash-bootstrap-components>=1.5.0
